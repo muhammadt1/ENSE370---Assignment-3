@@ -16,18 +16,18 @@ public class UniversitySystem {
     public double scholarshipRate = 100;
 
     public void enrollStudent(String studentId, String courseCode, String semester, String paymentType) {
-        Student s = null;
-        Course c = null;
+        Student student = null;
+        Course course= null;
 
         for (Student st : students) {
             if (st.id.equals(studentId)) {
-                s = st;
+                student = st;
             }
         }
 
         for (Course co : courses) {
             if (co.code.equals(courseCode)) {
-                c = co;
+                course = co;
             }
         }
 
@@ -164,35 +164,35 @@ public class UniversitySystem {
                 else if (grade.equals("D")) points = 1.0;
                 else if (grade.equals("F")) points = 0.0;
 
-                Student s = null;
-                Course c = null;
+                Student student = null;
+                Course course = null;
 
                 for (Student st : students) {
-                    if (st.id.equals(studentId)) s = st;
+                    if (st.id.equals(studentId)) student = st;
                 }
 
                 for (Course co : courses) {
-                    if (co.code.equals(courseCode)) c = co;
+                    if (co.code.equals(courseCode)) course = co;
                 }
 
-                if (s != null && c != null) {
-                    s.totalCompletedCredits += c.creditHours;
-                    s.totalGradePoints += points * c.creditHours;
-                    s.gpa = s.totalGradePoints / s.totalCompletedCredits;
+                if (student != null && course != null) {
+                    student.totalCompletedCredits += course.creditHours;
+                    student.totalGradePoints += points * course.creditHours;
+                    student.gpa = student.totalGradePoints / student.totalCompletedCredits;
 
-                    if (s.gpa < 2.0) {
-                        s.status = "PROBATION";
-                    } else if (s.gpa >= 2.0 && s.gpa < 3.5) {
-                        s.status = "GOOD";
+                    if (student.gpa < 2.0) {
+                        student.status = "PROBATION";
+                    } else if (student.gpa >= 2.0 && student.gpa < 3.5) {
+                        student.status = "GOOD";
                     } else {
-                        s.status = "HONOR";
+                        student.status = "HONOR";
                     }
 
-                    System.out.println("Updated GPA: " + s.gpa);
-                    System.out.println("Updated Status: " + s.status);
+                    System.out.println("Updated GPA: " + student.gpa);
+                    System.out.println("Updated Status: " + student.status);
 
-                    if (s.email != null && s.email.contains("@")) {
-                        System.out.println("Email sent to " + s.email + ": grade posted");
+                    if (student.email != null && student.email.contains("@")) {
+                        System.out.println("Email sent to " + student.email + ": grade posted");
                     } else {
                         System.out.println("Could not send grade email");
                     }
@@ -202,14 +202,14 @@ public class UniversitySystem {
     }
 
     public void processPayment(String studentId, double amount, String method) {
-        Student s = null;
+        Student student = null;
         for (Student st : students) {
             if (st.id.equals(studentId)) {
-                s = st;
+                student = st;
             }
         }
 
-        if (s == null) {
+        if (student == null) {
             System.out.println("Student not found");
             return;
         }
@@ -229,43 +229,43 @@ public class UniversitySystem {
             amount = amount - 10;
         }
 
-        s.outstandingBalance = s.outstandingBalance - amount;
-        if (s.outstandingBalance < 0) {
-            s.outstandingBalance = 0;
+        student.outstandingBalance = student.outstandingBalance - amount;
+        if (student.outstandingBalance < 0) {
+            student.outstandingBalance = 0;
         }
 
         payments.add(new PaymentRecord(studentId, amount, method, "PAID"));
 
-        System.out.println("Payment processed for " + s.name);
+        System.out.println("Payment processed for " + student.name);
         System.out.println("Method: " + method);
         System.out.println("Amount accepted: " + amount);
-        System.out.println("Remaining balance: " + s.outstandingBalance);
+        System.out.println("Remaining balance: " + student.outstandingBalance);
 
-        if (s.email != null && s.email.contains("@")) {
-            System.out.println("Email sent to " + s.email + ": payment received");
+        if (student.email != null && student.email.contains("@")) {
+            System.out.println("Email sent to " + student.email + ": payment received");
         }
     }
 
     public void printTranscript(String studentId) {
-        Student s = null;
+        Student student = null;
         for (Student st : students) {
             if (st.id.equals(studentId)) {
-                s = st;
+                student = st;
             }
         }
 
-        if (s == null) {
+        if (student == null) {
             System.out.println("Student not found");
             return;
         }
 
         System.out.println("----- TRANSCRIPT -----");
         System.out.println("University: " + universityName);
-        System.out.println("Name: " + s.name);
-        System.out.println("ID: " + s.id);
-        System.out.println("Department: " + s.department);
-        System.out.println("Status: " + s.status);
-        System.out.println("GPA: " + s.gpa);
+        System.out.println("Name: " + student.name);
+        System.out.println("ID: " + student.id);
+        System.out.println("Department: " + student.department);
+        System.out.println("Status: " + student.status);
+        System.out.println("GPA: " + student.gpa);
 
         for (Enrollment e : enrollments) {
             if (e.studentId.equals(studentId)) {
@@ -281,8 +281,8 @@ public class UniversitySystem {
             }
         }
 
-        System.out.println("Outstanding Balance: " + s.outstandingBalance);
-        if (s.outstandingBalance > 0) {
+        System.out.println("Outstanding Balance: " + student.outstandingBalance);
+        if (student.outstandingBalance > 0) {
             System.out.println("WARNING: unpaid dues");
         }
     }
