@@ -1,16 +1,16 @@
 public class Course {
-    public String code;
-    public String title;
-    public String instructorName;
-    public int creditHours;
-    public int capacity;
-    public int enrolled;
-    public String prerequisite;
-    public String day;
-    public String timeSlot;
+    private String code;
+    private String title;
+    private String instructorName;
+    private int creditHours;
+    private int capacity;
+    private int enrolled;
+    private String prerequisite;
+    private String day;
+    private String timeSlot;
 
-    public Course(String code, String title, String instructorName, int creditHours, int capacity,
-                  String prerequisite, String day, String timeSlot) {
+    public Course(String code, String title, String instructorName, int creditHours,
+                  int capacity, String prerequisite, String day, String timeSlot) {
         this.code = code;
         this.title = title;
         this.instructorName = instructorName;
@@ -21,4 +21,16 @@ public class Course {
         this.day = day;
         this.timeSlot = timeSlot;
     }
+
+    public String getCode() { return code; }
+    public String getTitle() { return title; }
+    public String getInstructorName() { return instructorName; }
+    public int getCreditHours() { return creditHours; }
+    public int getCapacity() { return capacity; }
+    public int getEnrolled() { return enrolled; }
+    public String getPrerequisite() { return prerequisite; }
+    public String getDay() { return day; }
+    public String getTimeSlot() { return timeSlot; }
+
+    public void incrementEnrolled() { this.enrolled++; }
 }

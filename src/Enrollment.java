@@ -1,12 +1,13 @@
 public class Enrollment {
-    public String studentId;
-    public String courseCode;
-    public String semester;
-    public String day;
-    public String timeSlot;
-    public String grade;
+    private String studentId;
+    private String courseCode;
+    private String semester;
+    private String day;
+    private String timeSlot;
+    private String grade;
 
-    public Enrollment(String studentId, String courseCode, String semester, String day, String timeSlot) {
+    public Enrollment(String studentId, String courseCode, String semester,
+                      String day, String timeSlot) {
         this.studentId = studentId;
         this.courseCode = courseCode;
         this.semester = semester;
@@ -14,4 +15,13 @@ public class Enrollment {
         this.timeSlot = timeSlot;
         this.grade = "IP";
     }
+
+    public String getStudentId() { return studentId; }
+    public String getCourseCode() { return courseCode; }
+    public String getSemester() { return semester; }
+    public String getDay() { return day; }
+    public String getTimeSlot() { return timeSlot; }
+    public String getGrade() { return grade; }
+
+    public void setGrade(String grade) { this.grade = grade; }
 }

@@ -87,12 +87,7 @@ public class UniversitySystem {
         course.incrementEnrolled();
 
 
-        System.out.println("Enrollment completed");
-        System.out.println("Student: " + student.getName());
-        System.out.println("Course: " + course.getTitle());
-        System.out.println("Semester: " + semester);
-        System.out.println("Fee charged: " + fee);
-        logs.add("Enrolled " + studentId + " into " + courseCode);
+        System.out.println("Enrollment completed for " + student.getName() + " in " + course.getTitle() + " | Fee: " + fee);
 
         if (student.getEmail() != null && student.getEmail().contains("@")) {
             System.out.println("Email sent to " + student.getEmail() + ": enrolled in " + course.getTitle());
