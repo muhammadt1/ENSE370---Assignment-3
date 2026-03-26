@@ -85,50 +85,14 @@ public class UniversitySystem {
             }
         }
 
-        if (course.prerequisite != null && !course.prerequisite.equals("")) {
-            boolean passed = false;
-            for (Enrollment e : enrollments) {
-                if (e.studentId.equals(studentId) && e.courseCode.equals(course.prerequisite)) {
-                    if (e.grade != null && (e.grade.equals("A") || e.grade.equals("B") || e.grade.equals("C"))) {
-                        passed = true;
-                    }
-                }
-            }
-            if (!passed) {
-                System.out.println("Missing prerequisite");
-                logs.add("Missing prerequisite for " + studentId);
-                return;
-            }
-        }
+        if (!checkPrerequisite(studentId, course)) {
+            System.out.println("Missing prerequisite");
+            logs.add("Missing prerequisite for " + studentId);
+            return;
 
-        double fee = 0;
-        if (student.type.equals("LOCAL")) {
-            fee = course.creditHours * 300;
-        } else if (student.type.equals("INTERNATIONAL")) {
-            fee = course.creditHours * 550;
-        } else if (student.type.equals("SCHOLARSHIP")) {
-            fee = course.creditHours * 100;
-        } else {
-            fee = course.creditHours * 300;
         }
-
-        if (paymentType.equals("INSTALLMENT")) {
-            fee = fee + 50;
-        } else if (paymentType.equals("CARD")) {
-            fee = fee + 10;
-        } else if (paymentType.equals("CASH")) {
-            fee = fee + 0;
-        } else {
-            fee = fee + 100;
-        }
-
-        if (semester.equals("SUMMER")) {
-            fee = fee + 200;
-        }
-
-        if (courseCode.startsWith("SE")) {
-            fee = fee + 75;
-        }
+        //new call for calcualteFee to seperate method
+        double fee = calculateFee(student, course, semester, paymentType, courseCode);
 
         student.outstandingBalance = student.outstandingBalance + fee;
         Enrollment newEnrollment = new Enrollment(studentId, courseCode, semester, course.day, course.timeSlot);
@@ -150,6 +114,58 @@ public class UniversitySystem {
             logs.add("Invalid email for " + student.id);
         }
     }
+
+    private double calculateFee(Student student, Course course, String semester, String paymentType, String courseCode) {
+        double fee = 0;
+
+        if (student.type.equals("LOCAL")) {
+            fee = course.creditHours * 300;
+        } else if (student.type.equals("INTERNATIONAL")) {
+            fee = course.creditHours * 550;
+        } else if (student.type.equals("SCHOLARSHIP")) {
+            fee = course.creditHours * 100;
+        } else {
+            fee = course.creditHours * 300;
+        }
+
+        if (paymentType.equals("INSTALLMENT")) {
+            fee = fee + 50;
+        } else if (paymentType.equals("CARD")) {
+            fee = fee + 10;
+        } else if (paymentType.equals("CASH")) {
+            // no surcharge for cash
+        } else {
+            fee = fee + 100;
+        }
+
+        if (semester.equals("SUMMER")) {
+            fee = fee + 200;
+        }
+
+        if (courseCode.startsWith("SE")) {
+            fee = fee + 75;
+        }
+
+        return fee;
+    }
+    private boolean checkPrerequisite(String studentId, Course course) {
+        if (course.prerequisite == null || course.prerequisite.equals("")) {
+            return true;
+        }
+
+    for (Enrollment enrollment : enrollments) {
+        if (enrollment.studentId.equals(studentId) &&
+                enrollment.courseCode.equals(course.prerequisite)) {
+            if (enrollment.grade != null && (
+                    enrollment.grade.equals("A") ||
+                            enrollment.grade.equals("B") ||
+                            enrollment.grade.equals("C"))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
     public void assignGrade(String studentId, String courseCode, String semester, String grade) {
         for (Enrollment e : enrollments) {
