@@ -16,20 +16,8 @@ public class UniversitySystem {
     public double scholarshipRate = 100;
 
     public void enrollStudent(String studentId, String courseCode, String semester, String paymentType) {
-        Student student = null;
-        Course course= null;
-
-        for (Student st : students) {
-            if (st.id.equals(studentId)) {
-                student = st;
-            }
-        }
-
-        for (Course co : courses) {
-            if (co.code.equals(courseCode)) {
-                course = co;
-            }
-        }
+        Student student = findStudent(studentId);
+        Course course = findCourse(courseCode);
 
         if (student == null) {
             System.out.println("Student not found");
@@ -180,16 +168,8 @@ public class UniversitySystem {
                 else if (grade.equals("D")) points = 1.0;
                 else if (grade.equals("F")) points = 0.0;
 
-                Student student = null;
-                Course course = null;
-
-                for (Student st : students) {
-                    if (st.id.equals(studentId)) student = st;
-                }
-
-                for (Course co : courses) {
-                    if (co.code.equals(courseCode)) course = co;
-                }
+                Student student = findStudent(studentId);
+                Course course = findCourse(courseCode);
 
                 if (student != null && course != null) {
                     student.totalCompletedCredits += course.creditHours;
