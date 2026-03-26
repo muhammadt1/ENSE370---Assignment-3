@@ -5,7 +5,7 @@ public class LegacyReportPrinter {
     public void printStudents(List<Student> students) {
         System.out.println("---- STUDENTS ----");
         for (Student s : students) {
-            System.out.println(s.id + " | " + s.name + " | " + s.department + " | " + s.status + " | " + s.gpa);
+            System.out.println(s.getId() + " | " + s.getName() + " | " + s.getDepartment() + " | " + s.getStatus() + " | " + s.getGpa());
         }
     }
 
@@ -19,7 +19,7 @@ public class LegacyReportPrinter {
     public void printCourses(List<Course> courses) {
         System.out.println("---- COURSES ----");
         for (Course c : courses) {
-            System.out.println(c.code + " | " + c.title + " | " + c.instructorName + " | " + c.creditHours);
+            System.out.println(c.getCode() + " | " + c.getTitle() + " | " + c.getInstructorName() + " | " + c.getCreditHours());
         }
     }
 }

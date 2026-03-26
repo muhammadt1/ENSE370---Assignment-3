@@ -3,7 +3,7 @@ public class Student {
     private String name;
     private String email;
     private String department;
-    private String type;
+    private StudentType type; //changed to studentType
     private String status;
     private boolean isBlocked;
     private double outstandingBalance;
@@ -11,7 +11,7 @@ public class Student {
     private double totalGradePoints;
     private double gpa;
 
-    public Student(String id, String name, String email, String department, String type) {
+    public Student(String id, String name, String email, String department, StudentType type) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -29,7 +29,7 @@ public class Student {
     public String getName() { return name; }
     public String getEmail() { return email; }
     public String getDepartment() { return department; }
-    public String getType() { return type; }
+    public StudentType getType() { return type; }
     public String getStatus() { return status; }
     public boolean isBlocked() { return isBlocked; }
     public double getOutstandingBalance() { return outstandingBalance; }

@@ -15,9 +15,16 @@ public class UniversitySystem {
     public double internationalRate = 550;
     public double scholarshipRate = 100;
 
+    private GradeService gradeService;
+    public UniversitySystem() {
+        this.gradeService = new GradeService(students, courses, enrollments);
+    }
+
+
     public void enrollStudent(String studentId, String courseCode, String semester, String paymentType) {
         Student student = findStudent(studentId);
         Course course = findCourse(courseCode);
+
 
         if (student == null) {
             System.out.println("Student not found");
@@ -101,14 +108,14 @@ public class UniversitySystem {
     private double calculateFee(Student student, Course course, String semester, String paymentType, String courseCode) {
         double fee = 0;
 
-        if (student.getType().equals("LOCAL")) {
+        if (student.getType() == StudentType.LOCAL) {
             fee = course.getCreditHours() * 300;
-        } else if (student.getType().equals("INTERNATIONAL")) {
-            fee = course.getCreditHours()  * 550;
-        } else if (student.getType().equals("SCHOLARSHIP")) {
-            fee = course.getCreditHours()  * 100;
+        } else if (student.getType() == StudentType.INTERNATIONAL) {
+            fee = course.getCreditHours() * 550;
+        } else if (student.getType() == StudentType.SCHOLARSHIP) {
+            fee = course.getCreditHours() * 100;
         } else {
-            fee = course.getCreditHours()  * 300;
+            fee = course.getCreditHours() * 300;
         }
 
         if (paymentType.equals("INSTALLMENT")) {
@@ -151,44 +158,8 @@ public class UniversitySystem {
 }
 
     public void assignGrade(String studentId, String courseCode, String semester, String grade) {
-        for (Enrollment e : enrollments) {
-            if (e.getStudentId().equals(studentId) && e.getCourseCode().equals(courseCode) && e.getSemester().equals(semester)) {
-                e.setGrade(e.getGrade());
-                System.out.println("Grade assigned");
-
-                double points = 0;
-                if (grade.equals("A")) points = 4.0;
-                else if (grade.equals("B")) points = 3.0;
-                else if (grade.equals("C")) points = 2.0;
-                else if (grade.equals("D")) points = 1.0;
-                else if (grade.equals("F")) points = 0.0;
-
-                Student student = findStudent(studentId);
-                Course course = findCourse(courseCode);
-
-                if (student != null && course != null) {
-                    student.setTotalCompletedCredits(student.getTotalCompletedCredits() + course.getCreditHours());
-                    student.setTotalGradePoints(student.getTotalGradePoints() + points * course.getCreditHours());
-                    student.setGpa(student.getTotalGradePoints() / student.getTotalCompletedCredits());
-                    student.setStatus("PROBATION");
-                    student.setStatus("GOOD");
-                    student.setStatus("HONOR");
-                    student.getEmail();
-                    student.getGpa();
-
-                    System.out.println("Updated GPA: " + student.getGpa());
-                    System.out.println("Updated Status: " + student.getStatus());
-
-                    if (student.getEmail() != null && student.getEmail().contains("@")) {
-                        System.out.println("Email sent to " + student.getEmail() + ": grade posted");
-                    } else {
-                        System.out.println("Could not send grade email");
-                    }
-                }
-            }
-        }
+        gradeService.assignGrade(studentId, courseCode, semester, grade);
     }
-
     public void processPayment(String studentId, double amount, String method) {
         Student student = null;
         for (Student st : students) {
