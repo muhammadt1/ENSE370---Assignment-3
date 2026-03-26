@@ -31,25 +31,25 @@ public class UniversitySystem {
             }
         }
 
-        if (s == null) {
+        if (student == null) {
             System.out.println("Student not found");
             logs.add("Student not found: " + studentId);
             return;
         }
 
-        if (c == null) {
+        if (course == null) {
             System.out.println("Course not found");
             logs.add("Course not found: " + courseCode);
             return;
         }
 
-        if (s.isBlocked) {
+        if (student.isBlocked) {
             System.out.println("Student is blocked");
             logs.add("Blocked student tried enrollment");
             return;
         }
 
-        if (s.status.equals("PROBATION")) {
+        if (student.status.equals("PROBATION")) {
             int count = 0;
             for (Enrollment e : enrollments) {
                 if (e.studentId.equals(studentId) && e.semester.equals(semester)) {
@@ -63,21 +63,21 @@ public class UniversitySystem {
             }
         }
 
-        if (c.enrolled >= c.capacity) {
+        if (course.enrolled >= course.capacity) {
             System.out.println("Course is full");
             logs.add("Course full: " + courseCode);
             return;
         }
 
-        if (s.outstandingBalance > 1000) {
+        if (student.outstandingBalance > 1000) {
             System.out.println("Student has unpaid balance");
-            logs.add("Balance issue for " + s.id);
+            logs.add("Balance issue for " + student.id);
             return;
         }
 
         for (Enrollment e : enrollments) {
             if (e.studentId.equals(studentId) && e.semester.equals(semester)) {
-                if (e.day.equals(c.day) && e.timeSlot.equals(c.timeSlot)) {
+                if (e.day.equals(course.day) && e.timeSlot.equals(course.timeSlot)) {
                     System.out.println("Schedule conflict");
                     logs.add("Conflict for " + studentId);
                     return;
@@ -85,10 +85,10 @@ public class UniversitySystem {
             }
         }
 
-        if (c.prerequisite != null && !c.prerequisite.equals("")) {
+        if (course.prerequisite != null && !course.prerequisite.equals("")) {
             boolean passed = false;
             for (Enrollment e : enrollments) {
-                if (e.studentId.equals(studentId) && e.courseCode.equals(c.prerequisite)) {
+                if (e.studentId.equals(studentId) && e.courseCode.equals(course.prerequisite)) {
                     if (e.grade != null && (e.grade.equals("A") || e.grade.equals("B") || e.grade.equals("C"))) {
                         passed = true;
                     }
@@ -102,14 +102,14 @@ public class UniversitySystem {
         }
 
         double fee = 0;
-        if (s.type.equals("LOCAL")) {
-            fee = c.creditHours * 300;
-        } else if (s.type.equals("INTERNATIONAL")) {
-            fee = c.creditHours * 550;
-        } else if (s.type.equals("SCHOLARSHIP")) {
-            fee = c.creditHours * 100;
+        if (student.type.equals("LOCAL")) {
+            fee = course.creditHours * 300;
+        } else if (student.type.equals("INTERNATIONAL")) {
+            fee = course.creditHours * 550;
+        } else if (student.type.equals("SCHOLARSHIP")) {
+            fee = course.creditHours * 100;
         } else {
-            fee = c.creditHours * 300;
+            fee = course.creditHours * 300;
         }
 
         if (paymentType.equals("INSTALLMENT")) {
@@ -130,24 +130,24 @@ public class UniversitySystem {
             fee = fee + 75;
         }
 
-        s.outstandingBalance = s.outstandingBalance + fee;
-        Enrollment newEnrollment = new Enrollment(studentId, courseCode, semester, c.day, c.timeSlot);
+        student.outstandingBalance = student.outstandingBalance + fee;
+        Enrollment newEnrollment = new Enrollment(studentId, courseCode, semester, course.day, course.timeSlot);
         enrollments.add(newEnrollment);
-        c.enrolled++;
+        course.enrolled++;
 
         System.out.println("Enrollment completed");
-        System.out.println("Student: " + s.name);
-        System.out.println("Course: " + c.title);
+        System.out.println("Student: " + student.name);
+        System.out.println("Course: " + course.title);
         System.out.println("Semester: " + semester);
         System.out.println("Fee charged: " + fee);
         logs.add("Enrolled " + studentId + " into " + courseCode);
 
-        if (s.email != null && s.email.contains("@")) {
-            System.out.println("Email sent to " + s.email + ": enrolled in " + c.title);
+        if (student.email != null && student.email.contains("@")) {
+            System.out.println("Email sent to " + student.email + ": enrolled in " + course.title);
             logs.add("Enrollment email sent");
         } else {
             System.out.println("Invalid email");
-            logs.add("Invalid email for " + s.id);
+            logs.add("Invalid email for " + student.id);
         }
     }
 
@@ -271,10 +271,10 @@ public class UniversitySystem {
             if (e.studentId.equals(studentId)) {
                 String title = "";
                 int credits = 0;
-                for (Course c : courses) {
-                    if (c.code.equals(e.courseCode)) {
-                        title = c.title;
-                        credits = c.creditHours;
+                for (Course course : courses) {
+                    if (course.code.equals(e.courseCode)) {
+                        title = course.title;
+                        credits = course.creditHours;
                     }
                 }
                 System.out.println(e.courseCode + " - " + title + " - " + credits + " credits - Grade: " + e.grade);
@@ -289,20 +289,20 @@ public class UniversitySystem {
 
     public void printCourseRoster(String courseCode) {
         System.out.println("----- COURSE ROSTER -----");
-        for (Course c : courses) {
-            if (c.code.equals(courseCode)) {
-                System.out.println("Course: " + c.title);
-                System.out.println("Instructor: " + c.instructorName);
-                System.out.println("Capacity: " + c.capacity);
-                System.out.println("Enrolled: " + c.enrolled);
+        for (Course course : courses) {
+            if (course.code.equals(courseCode)) {
+                System.out.println("Course: " + course.title);
+                System.out.println("Instructor: " + course.instructorName);
+                System.out.println("Capacity: " + course.capacity);
+                System.out.println("Enrolled: " + course.enrolled);
             }
         }
 
         for (Enrollment e : enrollments) {
             if (e.courseCode.equals(courseCode)) {
-                for (Student s : students) {
-                    if (s.id.equals(e.studentId)) {
-                        System.out.println(s.id + " - " + s.name + " - " + s.status);
+                for (Student student : students) {
+                    if (student.id.equals(e.studentId)) {
+                        System.out.println(student.id + " - " + student.name + " - " + student.status);
                     }
                 }
             }
@@ -319,10 +319,10 @@ public class UniversitySystem {
         double avgGpa = 0;
         int gpaCount = 0;
 
-        for (Student s : students) {
-            if (s.department.equals(department)) {
+        for (Student student : students) {
+            if (student.department.equals(department)) {
                 studentCount++;
-                avgGpa += s.gpa;
+                avgGpa += student.gpa;
                 gpaCount++;
             }
         }
@@ -333,8 +333,8 @@ public class UniversitySystem {
             }
         }
 
-        for (Course c : courses) {
-            if (c.code.startsWith(department)) {
+        for (Course course : courses) {
+            if (course.code.startsWith(department)) {
                 courseCount++;
             }
         }
@@ -350,38 +350,38 @@ public class UniversitySystem {
     }
 
     public void sendWarningLetters() {
-        for (Student s : students) {
-            if (s.outstandingBalance > 500 || s.status.equals("PROBATION")) {
-                if (s.email != null && s.email.contains("@")) {
-                    System.out.println("Sending warning email to " + s.email);
-                    if (s.outstandingBalance > 500) {
+        for (Student student : students) {
+            if (student.outstandingBalance > 500 || student.status.equals("PROBATION")) {
+                if (student.email != null && student.email.contains("@")) {
+                    System.out.println("Sending warning email to " + student.email);
+                    if (student.outstandingBalance > 500) {
                         System.out.println("Reason: unpaid balance");
                     }
-                    if (s.status.equals("PROBATION")) {
+                    if (student.status.equals("PROBATION")) {
                         System.out.println("Reason: academic probation");
                     }
-                    logs.add("Warning sent to " + s.id);
+                    logs.add("Warning sent to " + student.id);
                 } else {
-                    System.out.println("Could not send warning to " + s.name);
-                    logs.add("Warning failed for " + s.id);
+                    System.out.println("Could not send warning to " + student.name);
+                    logs.add("Warning failed for " + student.id);
                 }
             }
         }
     }
 
     public Student findStudent(String id) {
-        for (Student s : students) {
-            if (s.id.equals(id)) {
-                return s;
+        for (Student student : students) {
+            if (student.id.equals(id)) {
+                return student;
             }
         }
         return null;
     }
 
     public Course findCourse(String code) {
-        for (Course c : courses) {
-            if (c.code.equals(code)) {
-                return c;
+        for (Course course : courses) {
+            if (course.code.equals(code)) {
+                return course;
             }
         }
         return null;
